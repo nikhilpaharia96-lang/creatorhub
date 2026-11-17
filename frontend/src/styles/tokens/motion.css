@@ -1,0 +1,67 @@
+/**
+ * ============================================================
+ * MOTION UTILITIES — CreatorHub Design System v1.0.0
+ * ============================================================
+ * Purpose:
+ *   CSS-level motion utilities built on the duration/easing
+ *   primitives (primitives.css) and category mapping
+ *   (semantic.css). Covers the plain-CSS transition cases;
+ *   Framer Motion variants (used in React components from
+ *   Milestone 1.6 onward) will read the same underlying
+ *   --motion-* custom properties so both systems stay in sync.
+ *
+ * Usage:
+ *   Only `transform` and `opacity` may be animated project-wide
+ *   (performance requirement — see Section 9). Apply the
+ *   `.motion-feedback`, `.motion-navigation`, or `.motion-attention`
+ *   utility class alongside a transform/opacity change.
+ *
+ * Example:
+ *   A button's hover scale uses `.motion-feedback` (120ms,
+ *   standard ease) — fast enough to feel instant, per the
+ *   "Speed Feels Premium" principle.
+ *
+ * Reduced Motion:
+ *   A single project-wide `prefers-reduced-motion` query collapses
+ *   all three categories to near-instant. This is the CSS half of
+ *   the reduced-motion strategy; the React/Framer Motion half
+ *   (a shared hook/provider) is implemented in Milestone 1.6.
+ * ============================================================
+ */
+
+.motion-feedback {
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-feedback-duration);
+  transition-timing-function: var(--motion-feedback-ease);
+}
+
+.motion-navigation {
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-navigation-duration);
+  transition-timing-function: var(--motion-navigation-ease);
+}
+
+.motion-navigation-page {
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-navigation-duration-page);
+  transition-timing-function: var(--motion-navigation-ease);
+}
+
+/* Attention Motion: reserved for rare, comprehension-improving use
+ * only (e.g. a "new item" badge appearing). Scale/opacity only —
+ * no bounce, no overshoot, per Milestone 1.4 governance rule. */
+.motion-attention {
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-attention-duration);
+  transition-timing-function: var(--motion-attention-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-feedback,
+  .motion-navigation,
+  .motion-navigation-page,
+  .motion-attention {
+    transition-duration: 1ms;
+    transition-timing-function: linear;
+  }
+}

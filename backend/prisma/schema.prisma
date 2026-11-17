@@ -1,0 +1,207 @@
+// ============================================================
+// CreatorHub — Prisma Schema
+// ============================================================
+// Design notes (per Section 15 — Database Philosophy):
+// - Single-seller marketplace today. Product has no "sellerId" yet,
+//   but is deliberately NOT hardcoded to assume single-seller in a way
+//   that blocks a future Vendor model — adding `sellerId String?` and
+//   a `Vendor` relation later is additive, not a rewrite.
+// - Currency stored as an explicit enum (INR only today) rather than
+//   a free-text string, so multi-currency later is an enum extension,
+//   not a schema rewrite.
+// - License tiers: NOT implemented yet (single implicit license per
+//   product). Schema avoids anything that would block adding a
+//   LicenseTier model later (Product -> LicenseTier[] with pricing
+//   per tier) — deliberately not built now per Section 22.
+// - PaymentProvider: Order stores `provider` as an enum + provider-
+//   specific reference fields, so Stripe can be added later as a
+//   second enum value without restructuring Order.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+enum Currency {
+  INR
+}
+
+enum PaymentProvider {
+  RAZORPAY
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders       Order[]
+  entitlements Entitlement[]
+  wishlistItems WishlistItem[]
+
+  @@map("users")
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  description   String
+  priceAmount   Int      // stored in smallest currency unit (paise for INR)
+  currency      Currency @default(INR)
+  category      String
+  thumbnailUrl  String
+  /// R2/S3 object key for the downloadable asset. Never exposed directly to
+  /// clients — only ever used server-side to generate a signed URL after
+  /// entitlement verification.
+  fileStorageKey String
+  fileSizeBytes  Int
+  isPublished    Boolean @default(false)
+
+  /// Per-product download policy. Defaults match Section 14
+  /// (5 downloads / 365 days) but are configurable per product.
+  downloadLimit     Int @default(5)
+  downloadExpiryDays Int @default(365)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orderItems    OrderItem[]
+  entitlements  Entitlement[]
+  wishlistItems WishlistItem[]
+
+  @@index([category])
+  @@index([isPublished])
+  @@map("products")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  status      OrderStatus @default(PENDING)
+  /// Amount BEFORE discount. totalAmount (below) is what's actually
+  /// charged; subtotalAmount is kept for order-history transparency
+  /// (e.g. "you saved ₹X").
+  subtotalAmount Int
+  discountAmount Int      @default(0)
+  totalAmount    Int
+  currency       Currency @default(INR)
+
+  couponId String?
+  coupon   Coupon? @relation(fields: [couponId], references: [id])
+
+  provider           PaymentProvider @default(RAZORPAY)
+  providerOrderId    String?         @unique
+  providerPaymentId  String?
+  providerSignature  String?
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([providerOrderId])
+  @@map("orders")
+}
+
+/// Discount codes, redeemable at checkout. Kept simple at MVP:
+/// percentage or fixed-amount off the order subtotal, with optional
+/// usage limit and expiry. Deliberately no per-product restriction or
+/// per-user usage cap yet — additive fields if needed later, not a
+/// rewrite (Section 15 philosophy: implement only what's requested).
+model Coupon {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  discountType DiscountType
+  /// For PERCENTAGE: 1-100. For FIXED: amount in smallest currency unit.
+  discountValue Int
+  isActive     Boolean      @default(true)
+  maxRedemptions Int?
+  redemptionCount Int       @default(0)
+  expiresAt    DateTime?
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("coupons")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  /// Price at time of purchase — never derive historical order totals
+  /// from the live Product price, which may change later.
+  priceAmount Int
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+/// Represents a user's permanent right to access a product they've
+/// purchased. Created only after payment verification succeeds.
+/// Download count/expiry are tracked here, not on Product, since they
+/// are per-user-per-product.
+model Entitlement {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  orderId   String
+
+  downloadsUsed Int      @default(0)
+  downloadLimit Int
+  expiresAt     DateTime
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@map("entitlements")
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("wishlist_items")
+}

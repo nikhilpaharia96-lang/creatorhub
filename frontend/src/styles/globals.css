@@ -1,0 +1,50 @@
+/**
+ * ============================================================
+ * GLOBAL STYLESHEET ENTRY POINT — CreatorHub Design System v1.0.0
+ * ============================================================
+ * Import order matters:
+ *   1. Tailwind v4 itself.
+ *   2. Primitives — raw scales, no meaning attached.
+ *   3. Semantic — purpose-mapped tokens referencing primitives.
+ *      Must load after primitives so the `var()` references resolve.
+ *   4. Motion utilities — depends on both primitive durations and
+ *      semantic category mappings.
+ *
+ * Components must never import primitives.css directly — always
+ * consume semantic tokens (semantic.css) or the resulting Tailwind
+ * utility classes they generate.
+ * ============================================================
+ */
+
+@import "tailwindcss";
+
+@import "./tokens/primitives.css";
+@import "./tokens/semantic.css";
+@import "./tokens/motion.css";
+
+/**
+ * ------------------------------------------------------------
+ * BASE ELEMENT DEFAULTS
+ * ------------------------------------------------------------
+ * Minimal, token-driven resets only. No component-level styling
+ * belongs here — that starts in Milestone 1.7 (Primitive UI
+ * Components).
+ * ------------------------------------------------------------
+ */
+
+html {
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background-color: var(--color-surface-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+* {
+  border-color: var(--color-border-default);
+}

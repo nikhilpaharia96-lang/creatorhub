@@ -1,0 +1,238 @@
+/**
+ * ============================================================
+ * PRIMITIVE TOKENS — CreatorHub Design System v1.0.0
+ * ============================================================
+ * Purpose:
+ *   Raw, un-opinionated design values (color ramps, spacing steps,
+ *   radii, shadows, blur, type scale, breakpoints). These carry NO
+ *   semantic meaning — a primitive doesn't know it's "the primary
+ *   button color" or "the danger text color."
+ *
+ * Usage:
+ *   Primitives are consumed ONLY by semantic.css. Components and
+ *   screens must NEVER reference a primitive token directly
+ *   (e.g. never `bg-brand-600` in a component — use the semantic
+ *   `bg-interactive-primary` instead). This indirection is what
+ *   allows a future dark theme or rebrand to be a mapping change
+ *   in semantic.css, not a rewrite of every component.
+ *
+ * Example:
+ *   --color-brand-600 is a primitive. semantic.css maps
+ *   --color-interactive-primary to it. Buttons consume
+ *   --color-interactive-primary, never --color-brand-600 directly.
+ * ============================================================
+ */
+
+@theme {
+  /* ------------------------------------------------------------
+   * COLOR — Brand Blue
+   * Single confident accent hue. Reserved for primary actions,
+   * links, focus states. Never used for decorative/background fills
+   * — see Brand Sky below for that purpose.
+   * ------------------------------------------------------------ */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb; /* primary interactive color */
+  --color-brand-700: #1d4ed8; /* hover/pressed */
+  --color-brand-800: #1e40af; /* active/pressed-deep */
+  --color-brand-900: #1e3a8a;
+  --color-brand-950: #172554; /* reserved for future dark-mode surface use */
+
+  /* ------------------------------------------------------------
+   * COLOR — Brand Sky (support palette)
+   * Lighter, decorative-only ramp. NEVER wired to interactive/action
+   * tokens. Purpose: empty states, hero backgrounds, info sections,
+   * decorative surfaces, accent-subtle (marketing/promo) contexts.
+   * ------------------------------------------------------------ */
+  --color-sky-50: #f0f9ff;
+  --color-sky-100: #e0f2fe;
+  --color-sky-200: #bae6fd;
+  --color-sky-300: #7dd3fc;
+  --color-sky-400: #38bdf8; /* upper bound — not for text, contrast too low */
+
+  /* ------------------------------------------------------------
+   * COLOR — Neutral (cool-gray)
+   * Carries almost all structural UI weight: text, borders,
+   * backgrounds, surfaces. Deliberately cool (not warm, not pure
+   * gray) so Brand Blue stays the only "warm-feeling" signal.
+   * ------------------------------------------------------------ */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617; /* reserved for future dark-mode base surface */
+
+  /* ------------------------------------------------------------
+   * COLOR — Status (success / warning / destructive)
+   * Distinct hue families from Brand Blue so status is never
+   * mistaken for interactivity. Each follows the same 100/600/700
+   * shape as Brand Blue: 100 = tint/background, 600 = base, 700 =
+   * hover/pressed equivalent.
+   * ------------------------------------------------------------ */
+  --color-success-100: #dcfce7;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+
+  --color-warning-100: #fef3c7;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+
+  --color-destructive-100: #fee2e2;
+  --color-destructive-600: #dc2626;
+  --color-destructive-700: #b91c1c;
+
+  /* ------------------------------------------------------------
+   * SPACING
+   * Standard 4px-based scale (matches Tailwind's default — reused
+   * deliberately rather than inventing a bespoke scale; see
+   * Milestone 1.4 rationale).
+   * ------------------------------------------------------------ */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ------------------------------------------------------------
+   * RADIUS
+   * Two families: "tight" (data-dense/admin surfaces) and "soft"
+   * (human/customer-facing surfaces). This dual language is a
+   * deliberate brand signature, not an inconsistency.
+   * ------------------------------------------------------------ */
+  --radius-sm: 6px;   /* tight — table cells, dense admin controls, chips */
+  --radius-md: 8px;   /* tight — tables, charts, admin panels */
+  --radius-lg: 12px;  /* soft — buttons, inputs, standard cards */
+  --radius-xl: 16px;  /* soft — modals, larger cards, bottom nav */
+  --radius-full: 9999px; /* soft — avatars, pills, icon buttons */
+
+  /* ------------------------------------------------------------
+   * SHADOW (elevation primitives)
+   * Exactly 4 levels, cool-toned (neutral-900 at low opacity, never
+   * pure black) per the Phase 1 constraint. No shadow value should
+   * ever exist outside these four.
+   * ------------------------------------------------------------ */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 8px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 24px rgba(15, 23, 42, 0.10), 0 4px 8px rgba(15, 23, 42, 0.04);
+
+  /* ------------------------------------------------------------
+   * BLUR
+   * Restricted, rare usage — overlays and floating surfaces only.
+   * Never applied to primary content surfaces (cards, listings).
+   * ------------------------------------------------------------ */
+  --blur-sm: 4px;
+  --blur-md: 12px;
+  --blur-lg: 24px;
+
+  /* ------------------------------------------------------------
+   * TYPOGRAPHY — font families
+   * ------------------------------------------------------------ */
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ------------------------------------------------------------
+   * TYPOGRAPHY — raw size scale
+   * Underlying primitives for the semantic typography styles
+   * (display-hero, heading-lg, body, etc. — defined in semantic.css).
+   * ------------------------------------------------------------ */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+  --text-5xl: 48px;
+
+  /* Line-height primitives, paired by index with the sizes above */
+  --leading-xs: 16px;
+  --leading-sm: 20px;
+  --leading-base: 24px;
+  --leading-lg: 28px;
+  --leading-xl: 28px;
+  --leading-2xl: 32px;
+  --leading-3xl: 36px;
+  --leading-4xl: 40px;
+  --leading-5xl: 52px;
+
+  /* Font weight primitives */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Letter-spacing primitives */
+  --tracking-tight: -0.02em;
+  --tracking-tight-sm: -0.01em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.01em;
+  --tracking-wider: 0.04em;
+
+  /* ------------------------------------------------------------
+   * MOTION
+   * Durations + single project-wide easing curve. Categorized by
+   * intent (feedback / navigation / attention) in semantic.css —
+   * these are the raw duration values only.
+   * ------------------------------------------------------------ */
+  --motion-duration-micro: 120ms;
+  --motion-duration-transition: 200ms;
+  --motion-duration-page: 350ms;
+  --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ------------------------------------------------------------
+   * Z-INDEX
+   * Semantic layering scale. Large gaps left between steps
+   * deliberately so a future in-between layer can be inserted
+   * without renumbering existing tokens.
+   * ------------------------------------------------------------ */
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-overlay: 1200;
+  --z-modal: 1300;
+  --z-toast: 1400;
+  --z-tooltip: 1500;
+
+  /* ------------------------------------------------------------
+   * BREAKPOINTS
+   * Tailwind-aligned scale plus one extra `xs` step for small-phone
+   * iteration (below Tailwind's default `sm`).
+   * ------------------------------------------------------------ */
+  --breakpoint-xs: 400px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ------------------------------------------------------------
+   * LAYOUT — container widths
+   * ------------------------------------------------------------ */
+  --layout-container-sm: 640px;
+  --layout-container-md: 768px;
+  --layout-container-lg: 1024px;
+  --layout-container-max: 1280px;
+  --layout-prose-max: 680px; /* readable text width — see semantic.css */
+}

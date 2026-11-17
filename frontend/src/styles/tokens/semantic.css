@@ -1,0 +1,303 @@
+/**
+ * ============================================================
+ * SEMANTIC TOKENS — CreatorHub Design System v1.0.0
+ * ============================================================
+ * Purpose:
+ *   Purpose-mapped tokens that reference primitives.css. This is
+ *   the ONLY layer components and screens should ever consume.
+ *   A component should never know or care that
+ *   --color-interactive-primary happens to resolve to
+ *   --color-brand-600 — that mapping is this file's job alone.
+ *
+ * Usage:
+ *   Reference semantic tokens by intent, not appearance:
+ *     - Use `bg-interactive-primary`, not `bg-brand-600`.
+ *     - Use `text-text-secondary`, not `text-neutral-600`.
+ *   This indirection is what makes a future dark theme, rebrand,
+ *   or accessibility contrast pass a mapping change here — not a
+ *   rewrite of every component that consumes these tokens.
+ *
+ * Example:
+ *   Dark mode later = swap what --color-surface-base points to in
+ *   a `@theme` override block. No component changes.
+ * ============================================================
+ */
+
+@theme {
+  /* ------------------------------------------------------------
+   * SURFACES — elevation-based, not color-based
+   * Depth is communicated by shadow token pairing (see docs below),
+   * not by shifting background color. Cards sit on white, lifted
+   * by shadow — consistent with "calm confidence."
+   *
+   * Pairing guide (enforced by convention, applied in components):
+   *   surface-base     — no shadow (page background)
+   *   surface-raised    — shadow-xs/sm (cards, list items)
+   *   surface-floating  — shadow-md/lg (dropdowns, popovers, tooltips)
+   *   surface-overlay   — modal/dialog backdrop (fixed opacity, no shadow)
+   * ------------------------------------------------------------ */
+  --color-surface-base: var(--color-neutral-0);
+  --color-surface-subtle: var(--color-neutral-50);
+  --color-surface-raised: var(--color-neutral-0);
+  --color-surface-raised-alt: var(--color-neutral-100); /* table stripe / secondary card */
+  --color-surface-floating: var(--color-neutral-0);
+  --color-surface-overlay: rgba(15, 23, 42, 0.5); /* neutral-900 @ 50% opacity */
+
+  /* ------------------------------------------------------------
+   * TEXT
+   * ------------------------------------------------------------ */
+  --color-text-primary: var(--color-neutral-900);
+  --color-text-secondary: var(--color-neutral-600);
+  --color-text-muted: var(--color-neutral-400);
+  --color-text-on-accent: var(--color-neutral-0); /* text on brand-colored buttons */
+  --color-text-link: var(--color-brand-600);
+
+  /* ------------------------------------------------------------
+   * BORDERS
+   * ------------------------------------------------------------ */
+  --color-border-default: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-300);
+  --color-border-focus: var(--color-brand-600);
+
+  /* ------------------------------------------------------------
+   * INTERACTIVE
+   * Brand Blue only. Brand Sky must never be wired in here — Sky
+   * is decorative-only per Milestone 1.2 governance rule.
+   * ------------------------------------------------------------ */
+  --color-interactive-primary: var(--color-brand-600);
+  --color-interactive-primary-hover: var(--color-brand-700);
+  --color-interactive-primary-active: var(--color-brand-800);
+  --color-interactive-primary-disabled: var(--color-brand-300);
+  --color-interactive-secondary: var(--color-neutral-100); /* secondary/ghost button surface */
+
+  /* ------------------------------------------------------------
+   * ACCENT-SUBTLE
+   * Decorative/marketing emphasis only — hero gradients, promo
+   * banners, empty states. Mapped to Brand Sky, never Brand Blue,
+   * and kept distinct from surface-* since its job is decorative
+   * emphasis, not structural elevation.
+   * ------------------------------------------------------------ */
+  --color-accent-subtle: var(--color-sky-100);
+  --color-accent-subtle-strong: var(--color-sky-200);
+
+  /* ------------------------------------------------------------
+   * STATUS — bg / text / icon / border variants
+   * Icon and text always share the same base step within a status
+   * so icon/text coloring can never mismatch.
+   * ------------------------------------------------------------ */
+  --color-status-success-bg: var(--color-success-100);
+  --color-status-success-text: var(--color-success-700);
+  --color-status-success-icon: var(--color-success-600);
+  --color-status-success-border: var(--color-success-600);
+
+  --color-status-warning-bg: var(--color-warning-100);
+  --color-status-warning-text: var(--color-warning-700);
+  --color-status-warning-icon: var(--color-warning-600);
+  --color-status-warning-border: var(--color-warning-600);
+
+  --color-status-error-bg: var(--color-destructive-100);
+  --color-status-error-text: var(--color-destructive-700);
+  --color-status-error-icon: var(--color-destructive-600);
+  --color-status-error-border: var(--color-destructive-600);
+
+  /* ------------------------------------------------------------
+   * FOCUS RING
+   * Fixed spec, applied identically to every interactive primitive:
+   * 2px solid outline, 2px offset, Brand Blue 600.
+   * ------------------------------------------------------------ */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-brand-600);
+
+  /* ------------------------------------------------------------
+   * RADIUS — semantic aliases
+   * ------------------------------------------------------------ */
+  --radius-interactive: var(--radius-lg); /* buttons, inputs */
+  --radius-surface-soft: var(--radius-xl); /* modals, larger cards */
+  --radius-surface-tight: var(--radius-md); /* tables, admin panels */
+
+  /* ------------------------------------------------------------
+   * LAYOUT — margins & prose width
+   * ------------------------------------------------------------ */
+  --layout-margin-mobile: var(--space-4);
+  --layout-margin-tablet: var(--space-6);
+  --layout-margin-desktop: var(--space-10);
+  --content-width-prose: var(--layout-prose-max); /* long-form text max-width, distinct from page containers */
+
+  /* ------------------------------------------------------------
+   * MOTION CATEGORIES — semantic mapping by intent
+   * Components should pick a category, not a raw duration:
+   *   Feedback Motion    — button press, toggle, cart-add confirm
+   *   Navigation Motion  — route transitions, modal/drawer, tabs
+   *   Attention Motion   — new-item badges, notification dots;
+   *                        use sparingly, only when it improves
+   *                        comprehension. Scale/opacity only, no
+   *                        bounce/overshoot.
+   * ------------------------------------------------------------ */
+  --motion-feedback-duration: var(--motion-duration-micro);
+  --motion-feedback-ease: var(--motion-ease-standard);
+
+  --motion-navigation-duration: var(--motion-duration-transition);
+  --motion-navigation-duration-page: var(--motion-duration-page);
+  --motion-navigation-ease: var(--motion-ease-standard);
+
+  --motion-attention-duration: var(--motion-duration-micro);
+  --motion-attention-ease: var(--motion-ease-standard);
+}
+
+/**
+ * ------------------------------------------------------------
+ * SEMANTIC TYPOGRAPHY STYLES
+ * ------------------------------------------------------------
+ * Purpose:
+ *   Composite styles bundling size + line-height + weight +
+ *   tracking into one reusable style. Screens/components should
+ *   use these, not raw --text-* sizes directly.
+ *
+ * Usage:
+ *   Implemented as utility classes (not @theme vars, since a
+ *   composite style bundles multiple CSS properties, which @theme
+ *   custom properties cannot express as a single applied unit).
+ *   Apply as a class: <h1 class="type-display-hero">
+ *
+ * Example:
+ *   type-heading-lg → 24px / 600 / -0.015em — page titles (mobile),
+ *   section headers.
+ * ------------------------------------------------------------
+ */
+
+.type-display-hero {
+  font-family: var(--font-sans);
+  font-size: var(--text-5xl);
+  line-height: var(--leading-5xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.type-display-page {
+  font-family: var(--font-sans);
+  font-size: var(--text-4xl);
+  line-height: var(--leading-4xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.type-heading-xl {
+  font-family: var(--font-sans);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-3xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight-sm);
+}
+
+.type-heading-lg {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xl);
+  line-height: var(--leading-2xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight-sm);
+}
+
+.type-heading-md {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  line-height: var(--leading-xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-tight-sm);
+}
+
+.type-title {
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  line-height: var(--leading-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--tracking-normal);
+}
+
+.type-subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-normal);
+}
+
+.type-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-normal);
+}
+
+.type-body-small {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-normal);
+}
+
+.type-caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--leading-xs);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-normal);
+}
+
+.type-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-normal);
+}
+
+.type-button {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: none;
+}
+
+.type-overline {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--leading-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+/**
+ * ------------------------------------------------------------
+ * TABULAR NUMERALS UTILITY
+ * ------------------------------------------------------------
+ * Purpose: fixed-width digits for anywhere numbers stack and must
+ * align — prices, order tables, admin analytics, download counts.
+ * ------------------------------------------------------------
+ */
+.text-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/**
+ * ------------------------------------------------------------
+ * FOCUS RING UTILITY
+ * ------------------------------------------------------------
+ * Purpose: the one accessibility rule every interactive primitive
+ * inherits with no exceptions. Applied via :focus-visible so it
+ * never shows on mouse click, only keyboard/assistive navigation.
+ * ------------------------------------------------------------
+ */
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
